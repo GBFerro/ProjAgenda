@@ -57,7 +57,7 @@ namespace ProjAgenda
 
         public override string ToString()
         {
-            return $"\n\nEndereço: {this.Street}\nEstado: {this.State}\nCidade: {this.City}\nPais: {this.Country}\nCEP: {this.PostalCode}";
+            return $"\nEndereço: {this.Street}\nEstado: {this.State}\nCidade: {this.City}\nPais: {this.Country}\nCEP: {this.PostalCode}";
         }
 
     }
