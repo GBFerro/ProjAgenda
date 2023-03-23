@@ -1,42 +1,19 @@
-﻿using System.Linq.Expressions;
-using System.Xml.Linq;
-using ProjAgenda;
+﻿using ProjAgenda;
 
 List<Contact> phoneBook = new List<Contact>();
 
-//Contact contact = new();//("Giovani Ferro", "16 997756688");
-
-//contact.Address.EditStreet("Rua nove de julho, 1910");
-//contact.Address.EditPostalCode("15990-000");
-//contact.Address.EditState("São Paulo");
-//contact.Address.EditCountry("Basil");
-//contact.Address.EditCity("Matão");
-
-//phoneBook.Add(contact);
-
-//Contact contact3 = new("Beatriz", "16 997756688");
-
-//contact3.Address.EditStreet("Rua 6, 1856");
-//contact3.Address.EditPostalCode("15990-000");
-//contact3.Address.EditState("São Paulo");
-//contact3.Address.EditCountry("Basil");
-//contact3.Address.EditCity("Matão");
-
-//phoneBook.Add(contact3);
-
-//Contact contact2 = new("Felipe", "16 997756688");
-
-//contact2.Address.EditStreet("Rua 15 de novembro, 185");
-//contact2.Address.EditPostalCode("15990-000");
-//contact2.Address.EditState("São Paulo");
-//contact2.Address.EditCountry("Basil");
-//contact2.Address.EditCity("Matão");
-
-//phoneBook.Add(contact2);
-
-//phoneBook.Remove(contact);
-
-PrintPhoneBook(phoneBook);
+if (File.Exists("AgendaContatos.txt"))
+{
+    try
+    {
+        phoneBook = ReadFile("AgendaContatos.txt");
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine("Leitura não foi possível");
+        Console.WriteLine(e);
+    }
+}
 
 do
 {
@@ -56,16 +33,20 @@ do
                 phoneBook.Add(contact);
             }
             phoneBook = phoneBook.OrderBy(x => x.Name).ToList();
+            WriteFile(phoneBook, "AgendaContatos.txt");
             Console.Clear();
             break;
 
         case 2:
             EditContact(FindContact());
+            WriteFile(phoneBook, "AgendaContatos.txt");
             Console.Clear();
             break;
 
         case 3:
             phoneBook.Remove(FindContact());
+            WriteFile(phoneBook, "AgendaContatos.txt");
+            Console.Clear();
             break;
 
         case 4:
@@ -92,7 +73,6 @@ do
     }
 
 } while (true);
-
 
 void FindByInitialLetter()
 {
@@ -151,18 +131,6 @@ Contact FindContact()
 
 void EditContact(Contact contact)
 {
-    //Console.WriteLine("Adicione as informações necessárias a seguir: \n");
-    //Console.Write("Nome: ");
-    //contact.Name = Console.ReadLine() + "\n";
-    //Console.Write("Telefone: ");
-    //contact.EditPhone(Console.ReadLine());
-    //Console.Write("\nEmail: ");
-    //contact.EditEmail(Console.ReadLine());
-    //Console.Write("\nEndereço: ");
-    //contact.Address.EditStreet(Console.ReadLine());
-    //Console.Write("Cidade: ");
-    //contact.Address.EditCity(Console.ReadLine());
-
     bool condition = true;
     do
     {
@@ -177,28 +145,28 @@ void EditContact(Contact contact)
 
             case 2:
                 Console.Write("Digite o telefone do contato: ");
-                contact.EditPhone(Console.ReadLine());
+                contact.Phone = Console.ReadLine();
                 Console.Clear();
                 break;
 
             case 3:
                 Console.Write("Digite o email do contato: ");
-                contact.EditEmail(Console.ReadLine());
+                contact.Email = Console.ReadLine();
                 Console.Clear();
 
                 break;
 
             case 4:
                 Console.Write("Digite o endereço: ");
-                contact.Address.EditStreet(Console.ReadLine());
+                contact.Address.Street = Console.ReadLine();
                 Console.Write("Digite a cidade: ");
-                contact.Address.EditCity(Console.ReadLine());
+                contact.Address.City = Console.ReadLine();
                 Console.Write("Digite o estado: ");
-                contact.Address.EditState(Console.ReadLine());
+                contact.Address.State = Console.ReadLine();
                 Console.Write("Digite o país: ");
-                contact.Address.EditCountry(Console.ReadLine());
+                contact.Address.Country = Console.ReadLine();
                 Console.Write("Digite o CEP: ");
-                contact.Address.EditPostalCode(Console.ReadLine());
+                contact.Address.PostalCode = Console.ReadLine();
                 break;
 
             case 5:
@@ -234,11 +202,12 @@ int Menu()
         "3 - Remover contato\n4 - Mostrar contatos\n5 - Buscar contato por inicial\n6 - Sair\n\n" +
         "Escolha uma opção: ");
 
-    var aux = int.Parse(Console.ReadLine());
+    var aux = IsInt();
 
     return aux;
 
 }
+
 int EditMenu()
 {
     Console.Clear();
@@ -249,4 +218,80 @@ int EditMenu()
     var aux = int.Parse(Console.ReadLine());
 
     return aux;
+}
+
+int IsInt()
+{
+    int value;
+    do
+    {
+        if (!int.TryParse(Console.ReadLine(), out value))
+        {
+            Console.WriteLine("Digite um número inteiro");
+        }
+        else
+        {
+            return value;
+        }
+
+    } while (true);
+}
+
+void WriteFile(List<Contact> contacts, string archiveName)
+{
+    try
+    {
+        StreamWriter sw = new StreamWriter(archiveName);
+        foreach (var item in contacts)
+        {
+            sw.WriteLine(item.ToString());
+        }
+        sw.Close();
+    }
+    catch (Exception)
+    {
+
+        throw;
+    }
+    finally
+    {
+        Console.WriteLine("Arquivo gravado");
+    }
+
+}
+
+List<Contact> ReadFile(string archiveName)
+{
+    List<Contact> contacts = new List<Contact>();
+    Contact contact;
+    Address address;
+    try
+    {
+        string line;
+        string[] aux = new string[8];
+        StreamReader sr = new StreamReader(archiveName);
+        while ((line = sr.ReadLine()) != null)
+        {
+            aux = line.Split(";");
+
+            contact = new(aux[0], aux[1], aux[2]);
+            address = new(aux[3], aux[4], aux[5], aux[6], aux[7]);
+            contact.Address = address;
+
+            contacts.Add(contact);
+        }
+        sr.Close();
+        return contacts;
+    }
+    catch (Exception)
+    {
+
+        throw;
+    }
+    finally
+    {
+        Console.WriteLine("Arquivo lido");
+        Thread.Sleep(1000);
+    }
+
 }

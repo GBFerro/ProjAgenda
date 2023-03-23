@@ -19,45 +19,18 @@ namespace ProjAgenda
             
         }
 
-        //public Address EditAddress(Address address)
-        //{
-        //    this.Street = address.Street;
-        //    this.City = address.City;
-        //    this.PostalCode = address.PostalCode;
-        //    this.Country = address.Country;
-        //    this.State = address.State;
-
-        //    return this;
-        //}
-
-        public void EditStreet(string street)
+        public Address(string street, string city, string state, string country, string postalCode)
         {
-            this.Street = street;
-        }
-
-        public void EditCity(string city)
-        {
-            this.City = city;
-        }
-
-        public void EditState(string state)
-        {
-            this.State = state;
-        }
-
-        public void EditCountry(string country)
-        {
-            this.Country = country;
-        }
-
-        public void EditPostalCode(string postalCode)
-        {
-            this.PostalCode = postalCode;
+            Street = street;
+            City = city;
+            State = state;
+            Country = country;
+            PostalCode = postalCode;
         }
 
         public override string ToString()
         {
-            return $"\nEndereço: {this.Street}\nEstado: {this.State}\nCidade: {this.City}\nPais: {this.Country}\nCEP: {this.PostalCode}";
+            return $"{this.Street};{this.State};{this.City};{this.Country};{this.PostalCode}";
         }
 
     }

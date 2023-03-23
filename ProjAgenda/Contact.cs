@@ -20,29 +20,17 @@ namespace ProjAgenda
             this.Phone = phone;
         }
 
-        //public Contact(string name, Address address, string phone, string email)
-        //{
-        //    this.Name = name;
-        //    this.Address = address;
-        //    this.Phone = phone;
-        //    this.Email = email;
-        //}
 
-        public void EditPhone(string phone)
+        public Contact(string name, string phone, string email)
         {
+            this.Name = name;
             this.Phone = phone;
-        }
-
-        public void EditEmail(string email)
-        {
             this.Email = email;
-        }
-
-       
+        }     
 
         public override string ToString()
         {
-            return $"Nome: {this.Name}\nTelefone: {this.Phone}\nEmail: {this.Email}\n{this.Address}\n\n";
+            return $"{this.Name};{this.Phone};{this.Email};{this.Address}";
         }
     }
 }
